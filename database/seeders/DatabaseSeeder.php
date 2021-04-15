@@ -16,14 +16,18 @@ class DatabaseSeeder extends Seeder
     {
         \App\Models\User::factory(10)->create();
 
-        DB::table('properties')->insert([
-            'title' => 'Maison',
-            'description' => 'Une super maison',
-            'price' => rand(25000, 150000),
-            'sold' => rand(0, 1),
-            'user_id' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $properties = ['Maison', 'Appartement', 'Garage', 'T3', 'Terrasse'];
+
+        foreach ($properties as $property) {
+            DB::table('properties')->insert([
+                'title' => $property,
+                'description' => 'Une super annonce pour '.$property,
+                'price' => rand(25000, 150000),
+                'sold' => rand(0, 1),
+                'user_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
     }
 }
