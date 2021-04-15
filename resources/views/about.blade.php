@@ -2,6 +2,11 @@
 {{-- Laravel comprend que layouts.app est layouts/app --}}
 @extends('layouts/app')
 
+{{-- @parent vaut la valeur par défaut "Immobiliare" --}}
+@section('title')
+    A propos - @parent
+@endsection
+
 {{-- On met le contenu suivant dans le yield content --}}
 @section('content')
     <h1>Hello {{ $name }}</h1>
