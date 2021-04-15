@@ -14,3 +14,16 @@ Pour travailler sur le projet, on doit le cloner et on doit installer les dépen
 ```
 composer install
 ```
+
+Si le fichier .env n'existe pas, il faut penser à le créer :
+
+```
+cp .env.example .env
+php artisan key:generate
+```
+
+Pour lancer le serveur de dév' :
+
+```
+php artisan serve
+```
