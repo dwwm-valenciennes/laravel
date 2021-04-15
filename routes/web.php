@@ -25,3 +25,7 @@ Route::get('/a-propos', function () {
         'bibis' => [1, 2, 3, 4],
     ]);
 });
+
+Route::get('/hello/{nom?}', function ($nom = 'Fiorella') {
+    return "<h1>Hello $nom</h1>";
+})->where('nom', '.{2,}'); // Le nom doit faire 2 caractères minimum
