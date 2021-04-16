@@ -9,6 +9,14 @@
             </a>
         </div>
 
+        {{-- old() permet de récupèrer le withInput(). Ce sont les
+            données de la requète précédente. --}}
+        @if (old())
+            <div class="alert alert-success">
+                L'annonce {{ old('title') }} a été ajoutée avec succès.
+            </div>
+        @endif
+
         <div class="row">
             @foreach ($properties as $property)
                 <div class="col-lg-3">

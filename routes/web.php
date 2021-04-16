@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -66,10 +67,29 @@ Route::get('/annonce/{id}', function ($id) {
 })->whereNumber('id');
 // On s'assure que $id est seulement un nombre
 
+// On affiche le formulaire
 Route::get('/annonce/creer', function () {
     return view('properties/create');
 });
 
-Route::post('/annonce/creer', function () {
-    return view('properties/create');
+// use Illuminate\Http\Request;
+Route::post('/annonce/creer', function (Request $request) {
+    // Traitement du formulaire
+    DB::table('properties')->insert([
+        'title' => $request->title,
+        'description' => $request->description,
+        'price' => $request->price,
+        'sold' => $request->filled('sold'),
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
+    // Autre solution...
+    /* DB::table('properties')->insert(
+        $request->all('title', 'description', 'price') +
+        ['sold' => $request->filled('sold')]
+    ); */
+
+    // On redirige et on met l'annonce dans la session
+    return redirect('/nos-annonces')->withInput();
 });
