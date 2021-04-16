@@ -46,3 +46,21 @@ Route::get('/nos-annonces', function () {
         'properties' => $properties,
     ]);
 });
+
+// On va créer une route pour voir UNE seule annonce
+// La route ressemble à cela : /annonce/2
+// On pourra donc récupérer l'id de l'annonce en dynamique
+// Avec cette ID, on doit faire la bonne requête (select ... where ...)
+// On crée une nouvelle vue properties/show
+// On affiche l'annonce (Titre, prix, description) sur cette page
+
+Route::get('/annonce/{id}', function ($id) {
+    // $property = DB::table('properties')->where('id', $id)->get()->first();
+    $property = DB::table('properties')->find($id);
+
+    if (! $property) {
+        abort(404); // On renvoie une 404 avec Laravel
+    }
+
+    return view('properties/show', ['property' => $property]);
+});
