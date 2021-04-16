@@ -63,4 +63,13 @@ Route::get('/annonce/{id}', function ($id) {
     }
 
     return view('properties/show', ['property' => $property]);
+})->whereNumber('id');
+// On s'assure que $id est seulement un nombre
+
+Route::get('/annonce/creer', function () {
+    return view('properties/create');
+});
+
+Route::post('/annonce/creer', function () {
+    return view('properties/create');
 });

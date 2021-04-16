@@ -2,7 +2,12 @@
 
 @section('content')
     <div class="container">
-        <h1 class="my-4 text-center">Nos annonces</h1>
+        <div class="d-flex justify-content-around align-items-center my-4">
+            <h1>Nos annonces</h1>
+            <a href="/annonce/creer" class="btn btn-primary">
+                Créer une annonce
+            </a>
+        </div>
 
         <div class="row">
             @foreach ($properties as $property)
