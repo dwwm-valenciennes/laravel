@@ -25,7 +25,7 @@
             </div>
         @endif
 
-        <form action="/annonce/creer" method="post">
+        <form action="/annonce/creer" method="post" enctype="multipart/form-data">
             @csrf
             <!-- Génére une balise avec le token CSRF. Ce token permet
             de protéger le site contre les attaques CSRF. Laravel
@@ -39,6 +39,10 @@
                 @error('title')
                     <span class="text-danger">{{ $message }}</span>
                 @enderror
+            </div>
+            <div>
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image">
             </div>
             <div>
                 <label for="description">Description</label>

@@ -70,6 +70,11 @@ class PropertyController extends Controller
             'updated_at' => now(),
         ]);
 
+        // Upload...
+        $request->image->storeAs(
+            'public/annonces', DB::getPdo()->lastInsertId().'.'.$request->image->extension()
+        );
+
         // Autre solution...
         /* DB::table('properties')->insert(
             $request->all('title', 'description', 'price') +
