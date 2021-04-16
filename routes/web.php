@@ -56,3 +56,5 @@ Route::post('/annonce/creer', [PropertyController::class, 'store']);
 
 Route::get('/annonce/editer/{id}', [PropertyController::class, 'edit']);
 Route::put('/annonce/editer/{id}', [PropertyController::class, 'update']);
+
+Route::delete('/annonce/{id}', [PropertyController::class, 'destroy']);

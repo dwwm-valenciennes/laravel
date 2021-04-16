@@ -32,6 +32,14 @@
                             <p class="card-text">{{ Str::limit($property->description, 25) }}</p>
                             <a href="/annonce/{{ $property->id }}" class="btn btn-primary">Voir l'annonce</a>
                             <a href="/annonce/editer/{{ $property->id }}" class="btn btn-secondary">Editer l'annonce</a>
+                            <form action="/annonce/{{ $property->id }}"
+                                method="post"
+                                onsubmit="return confirm('Voulez-vous supprimer cette annonce ?')"
+                            >
+                                @csrf
+                                @method('delete')
+                                <button class="btn btn-danger">Supprimer l'annonce</button>
+                            </form>
                         </div>
                         <div class="card-footer text-muted">
                             {{ number_format($property->price) }} €

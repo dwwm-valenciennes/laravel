@@ -119,4 +119,15 @@ class PropertyController extends Controller
         return redirect('/nos-annonces')
             ->with('message', 'Annonce mise à jour.');
     }
+
+    /**
+     * Supprimer l'annonce dans la BDD
+     */
+    public function destroy($id)
+    {
+        DB::table('properties')->delete($id);
+
+        return redirect('/nos-annonces')
+            ->with('message', 'Annonce supprimée.');
+    }
 }
