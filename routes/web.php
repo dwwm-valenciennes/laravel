@@ -75,6 +75,12 @@ Route::get('/annonce/creer', function () {
 // use Illuminate\Http\Request;
 Route::post('/annonce/creer', function (Request $request) {
     // Traitement du formulaire
+    $request->validate([
+        'title' => 'required|string|unique:properties|min:2',
+        'description' => 'required|string|min:15',
+        'price' => 'required|integer|gt:0',
+    ]);
+
     DB::table('properties')->insert([
         'title' => $request->title,
         'description' => $request->description,

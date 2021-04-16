@@ -15,6 +15,16 @@
 
         <h2>Formulaire en POST</h2>
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="/annonce/creer" method="post">
             @csrf
             <!-- Génére une balise avec le token CSRF. Ce token permet
@@ -24,18 +34,22 @@
             <!-- <input type="hidden" name="_token" value="123456"> -->
             <div>
                 <label for="title">Titre</label>
-                <input type="text" name="title" id="title" class="form-control">
+                <input type="text" name="title" id="title" class="form-control" value="{{ old('title') }}">
+
+                @error('title')
+                    <span class="text-danger">{{ $message }}</span>
+                @enderror
             </div>
             <div>
                 <label for="description">Description</label>
-                <textarea name="description" id="description" class="form-control"></textarea>
+                <textarea name="description" id="description" class="form-control">{{ old('description') }}</textarea>
             </div>
             <div>
                 <label for="price">Prix</label>
-                <input type="text" name="price" id="price" class="form-control">
+                <input type="text" name="price" id="price" class="form-control" value="{{ old('price') }}">
             </div>
             <div class="form-check">
-                <input type="checkbox" name="sold" id="sold" class="form-check-input">
+                <input type="checkbox" name="sold" id="sold" class="form-check-input" {{ old('sold') ? 'checked' : '' }}>
                 <label for="sold">Vendu ?</label>
             </div>
 
