@@ -17,6 +17,12 @@
             </div>
         @endif
 
+        @if (session('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
+
         <div class="row">
             @foreach ($properties as $property)
                 <div class="col-lg-3">
@@ -25,6 +31,7 @@
                             <h5 class="card-title">{{ $property->title }}</h5>
                             <p class="card-text">{{ Str::limit($property->description, 25) }}</p>
                             <a href="/annonce/{{ $property->id }}" class="btn btn-primary">Voir l'annonce</a>
+                            <a href="/annonce/editer/{{ $property->id }}" class="btn btn-secondary">Editer l'annonce</a>
                         </div>
                         <div class="card-footer text-muted">
                             {{ number_format($property->price) }} €

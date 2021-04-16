@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PropertyController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -33,20 +34,8 @@ Route::get('/hello/{nom?}', function ($nom = 'Fiorella') {
 })->where('nom', '.{2,}'); // Le nom doit faire 2 caractères minimum
 
 // Afficher les annonces
-Route::get('/nos-annonces', function () {
-    // ATTENTION use Illuminate\Support\Facades\DB;
-    $properties = DB::select('select * from properties where sold = :sold', [
-        'sold' => 0,
-    ]);
-    // Si on ne veut plus écrire de SQL...
-    $properties = DB::table('properties')
-        ->where('sold', 0)->where('sold', '=', 1, 'or')->get();
-    // WHERE sold = 0 OR sold = 1
-
-    return view('properties/index', [
-        'properties' => $properties,
-    ]);
-});
+Route::get('/nos-annonces', [PropertyController::class, 'index']);
+Route::get('/los-annoncas', [PropertyController::class, 'index']);
 
 // On va créer une route pour voir UNE seule annonce
 // La route ressemble à cela : /annonce/2
@@ -55,47 +44,15 @@ Route::get('/nos-annonces', function () {
 // On crée une nouvelle vue properties/show
 // On affiche l'annonce (Titre, prix, description) sur cette page
 
-Route::get('/annonce/{id}', function ($id) {
-    // $property = DB::table('properties')->where('id', $id)->get()->first();
-    $property = DB::table('properties')->find($id);
-
-    if (! $property) {
-        abort(404); // On renvoie une 404 avec Laravel
-    }
-
-    return view('properties/show', ['property' => $property]);
-})->whereNumber('id');
+Route::get('/annonce/{id}', [PropertyController::class, 'show'])->whereNumber('id');
 // On s'assure que $id est seulement un nombre
 
 // On affiche le formulaire
-Route::get('/annonce/creer', function () {
-    return view('properties/create');
-});
+// use App\Http\Controllers\PropertyController;
+Route::get('/annonce/creer', [PropertyController::class, 'create']);
 
 // use Illuminate\Http\Request;
-Route::post('/annonce/creer', function (Request $request) {
-    // Traitement du formulaire
-    $request->validate([
-        'title' => 'required|string|unique:properties|min:2',
-        'description' => 'required|string|min:15',
-        'price' => 'required|integer|gt:0',
-    ]);
+Route::post('/annonce/creer', [PropertyController::class, 'store']);
 
-    DB::table('properties')->insert([
-        'title' => $request->title,
-        'description' => $request->description,
-        'price' => $request->price,
-        'sold' => $request->filled('sold'),
-        'created_at' => now(),
-        'updated_at' => now(),
-    ]);
-
-    // Autre solution...
-    /* DB::table('properties')->insert(
-        $request->all('title', 'description', 'price') +
-        ['sold' => $request->filled('sold')]
-    ); */
-
-    // On redirige et on met l'annonce dans la session
-    return redirect('/nos-annonces')->withInput();
-});
+Route::get('/annonce/editer/{id}', [PropertyController::class, 'edit']);
+Route::put('/annonce/editer/{id}', [PropertyController::class, 'update']);
