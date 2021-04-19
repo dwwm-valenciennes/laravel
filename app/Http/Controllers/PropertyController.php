@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -58,22 +59,27 @@ class PropertyController extends Controller
         $request->validate([
             'title' => 'required|string|unique:properties|min:2',
             'description' => 'required|string|min:15',
+            'image' => 'image',
             'price' => 'required|integer|gt:0',
         ]);
+
+        // Upload...
+        $path = null;
+        if ($request->hasFile('image')) {
+            $path = $request->image->store(
+                'public/annonces',
+            ); // public/annonces/1234.jpg => /storage/annonces/1234.jpg
+        }
 
         DB::table('properties')->insert([
             'title' => $request->title,
             'description' => $request->description,
+            'image' => str_replace('public', '/storage', $path),
             'price' => $request->price,
             'sold' => $request->filled('sold'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
-
-        // Upload...
-        $request->image->storeAs(
-            'public/annonces', DB::getPdo()->lastInsertId().'.'.$request->image->extension()
-        );
 
         // Autre solution...
         /* DB::table('properties')->insert(
@@ -130,6 +136,14 @@ class PropertyController extends Controller
      */
     public function destroy($id)
     {
+        $property = DB::table('properties')->find($id);
+
+        if ($property->image) {
+            Storage::delete(
+                str_replace('/storage', 'public', $property->image)
+            );
+        }
+
         DB::table('properties')->delete($id);
 
         return redirect('/nos-annonces')

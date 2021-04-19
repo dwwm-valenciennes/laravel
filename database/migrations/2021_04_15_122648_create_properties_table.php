@@ -17,6 +17,7 @@ class CreatePropertiesTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->integer('price');
             $table->boolean('sold');
             $table->foreignId('user_id')->nullable()->constrained();
