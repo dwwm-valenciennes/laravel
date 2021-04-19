@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -23,21 +24,22 @@ class PropertyController extends Controller
         // WHERE sold = 0 OR sold = 1
 
         return view('properties/index', [
-            'properties' => $properties,
+            'properties' => Property::all(),
+            // 'properties' => Property::where('sold', 0)->get()
         ]);
     }
 
     /**
      * Affiche une annonce.
      */
-    public function show($id)
+    public function show(Property $property)
     {
         // $property = DB::table('properties')->where('id', $id)->get()->first();
-        $property = DB::table('properties')->find($id);
+        //$property = DB::table('properties')->find($id);
 
-        if (! $property) {
-            abort(404); // On renvoie une 404 avec Laravel
-        }
+        //if (! $property) {
+        //    abort(404); // On renvoie une 404 avec Laravel
+        //}
 
         return view('properties/show', ['property' => $property]);
     }
@@ -71,7 +73,7 @@ class PropertyController extends Controller
             ); // public/annonces/1234.jpg => /storage/annonces/1234.jpg
         }
 
-        DB::table('properties')->insert([
+        /*DB::table('properties')->insert([
             'title' => $request->title,
             'description' => $request->description,
             'image' => str_replace('public', '/storage', $path),
@@ -79,6 +81,14 @@ class PropertyController extends Controller
             'sold' => $request->filled('sold'),
             'created_at' => now(),
             'updated_at' => now(),
+        ]);*/
+
+        Property::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'image' => str_replace('public', '/storage', $path),
+            'price' => $request->price,
+            'sold' => $request->filled('sold'),
         ]);
 
         // Autre solution...
@@ -96,11 +106,12 @@ class PropertyController extends Controller
      */
     public function edit($id)
     {
-        $property = DB::table('properties')->find($id);
+        //$property = DB::table('properties')->find($id);
 
-        if (! $property) {
-            abort(404);
-        }
+        //if (! $property) {
+        //    abort(404);
+        //}
+        $property = Property::findOrFail($id);
 
         return view('properties/edit', ['property' => $property]);
     }
@@ -119,12 +130,12 @@ class PropertyController extends Controller
             'price' => 'required|integer|gt:0',
         ]);
 
-        DB::table('properties')->where('id', $id)->update([
+        // DB::table('properties')->where('id', $id)
+        Property::findOrFail($id)->update([
             'title' => $request->title,
             'description' => $request->description,
             'price' => $request->price,
             'sold' => $request->filled('sold'),
-            'updated_at' => now(),
         ]);
 
         return redirect('/nos-annonces')
@@ -136,7 +147,8 @@ class PropertyController extends Controller
      */
     public function destroy($id)
     {
-        $property = DB::table('properties')->find($id);
+        // $property = DB::table('properties')->find($id);
+        $property = Property::findOrFail($id);
 
         if ($property->image) {
             Storage::delete(
@@ -144,7 +156,8 @@ class PropertyController extends Controller
             );
         }
 
-        DB::table('properties')->delete($id);
+        //DB::table('properties')->delete($id);
+        $property->delete();
 
         return redirect('/nos-annonces')
             ->with('message', 'Annonce supprimée.');

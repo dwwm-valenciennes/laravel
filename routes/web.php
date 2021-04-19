@@ -44,6 +44,7 @@ Route::get('/los-annoncas', [PropertyController::class, 'index']);
 // On crée une nouvelle vue properties/show
 // On affiche l'annonce (Titre, prix, description) sur cette page
 
+Route::get('/annonce/{property}', [PropertyController::class, 'show'])->whereNumber('property');
 Route::get('/annonce/{id}', [PropertyController::class, 'show'])->whereNumber('id');
 // On s'assure que $id est seulement un nombre
 
